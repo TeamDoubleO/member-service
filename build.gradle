@@ -45,6 +45,12 @@ dependencies {
     compileOnly 'org.projectlombok:lombok'
     //mysql
     implementation 'mysql:mysql-connector-java:8.0.33'
+
+    //actuator
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'io.micrometer:micrometer-core'
+    implementation 'io.micrometer:micrometer-registry-prometheus'
+
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'com.h2database:h2'
