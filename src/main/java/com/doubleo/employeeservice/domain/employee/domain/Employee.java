@@ -41,6 +41,7 @@ public class Employee extends BaseTimeEntity {
     private String profileImageUrl;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "employee_status")
     private EmployeeStatus status; // 재직상태
 
     @Builder(access = AccessLevel.PRIVATE)
