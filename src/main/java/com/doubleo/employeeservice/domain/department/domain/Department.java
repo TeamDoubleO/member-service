@@ -4,6 +4,7 @@ import com.doubleo.employeeservice.domain.common.model.BaseTimeEntity;
 import com.doubleo.employeeservice.domain.employee.domain.Employee;
 import jakarta.persistence.*;
 import java.util.ArrayList;
+import java.util.List;
 import lombok.*;
 
 @Entity
@@ -19,7 +20,7 @@ public class Department extends BaseTimeEntity {
     private String departmentName; // 정규화 추가
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    private ArrayList<Employee> employeeList = new ArrayList<>();
+    private List<Employee> employeeList = new ArrayList<>();
 
     @Builder(access = AccessLevel.PRIVATE)
     private Department(String departmentName) {
