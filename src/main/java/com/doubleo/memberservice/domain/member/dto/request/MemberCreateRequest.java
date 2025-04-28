@@ -1,11 +1,9 @@
-package com.doubleo.memberservice.domain.employee.dto.request;
+package com.doubleo.memberservice.domain.member.dto.request;
 
 import com.doubleo.memberservice.domain.department.domain.Department;
-import com.doubleo.memberservice.domain.employee.domain.EmployeeStatus;
-import com.doubleo.memberservice.domain.employee.domain.Position;
 import io.swagger.v3.oas.annotations.media.Schema;
 
-public record EmployeeCreateRequest(
+public record MemberCreateRequest(
         @Schema(description = "직원 email", example = "sunwoo@lgcns.kr") String email,
         @Schema(description = "직원 ID 번호", example = "12345") String idNumber,
         @Schema(description = "직원 이름", example = "정선우") String name,
