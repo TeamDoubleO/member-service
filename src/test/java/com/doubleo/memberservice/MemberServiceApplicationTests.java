@@ -1,4 +1,4 @@
-package com.doubleo.employeeservice;
+package com.doubleo.memberservice;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
