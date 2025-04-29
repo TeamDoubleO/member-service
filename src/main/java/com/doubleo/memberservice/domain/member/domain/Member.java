@@ -2,25 +2,22 @@ package com.doubleo.memberservice.domain.member.domain;
 
 import com.doubleo.memberservice.domain.common.model.BaseTimeEntity;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Getter
 @NoArgsConstructor
-@Table(name = "`member`")
 public class Member extends BaseTimeEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "member_id")
+    @Column(name = "member_id", nullable = false)
     private Long id;
 
-    @Column(name = "member_email")
+    @Column(name = "member_email", nullable = false)
     private String email; // 정규화 추가
 
-    @Column(name = "member_password")
+    @Column(name = "member_password", nullable = false)
     private String password;
 
     @Column(name = "member_name")
@@ -50,5 +47,9 @@ public class Member extends BaseTimeEntity {
                 .regNo(regNo)
                 .contact(contact)
                 .build();
+    }
+
+    public static Member createMember(String email, String password) {
+        return Member.builder().email(email).password(password).build();
     }
 }
