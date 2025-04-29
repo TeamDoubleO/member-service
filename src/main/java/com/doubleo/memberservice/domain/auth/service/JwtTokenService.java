@@ -1,6 +1,5 @@
 package com.doubleo.memberservice.domain.auth.service;
 
-
 import com.doubleo.memberservice.domain.auth.domain.BlackListToken;
 import com.doubleo.memberservice.domain.auth.domain.RefreshToken;
 import com.doubleo.memberservice.domain.auth.dto.AccessTokenDto;
@@ -9,10 +8,9 @@ import com.doubleo.memberservice.domain.auth.repository.BlackListTokenRepository
 import com.doubleo.memberservice.domain.auth.repository.RefreshTokenRepository;
 import com.doubleo.memberservice.global.util.JwtUtil;
 import io.jsonwebtoken.ExpiredJwtException;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -52,8 +50,8 @@ public class JwtTokenService {
 
         Optional<RefreshToken> refreshToken = getRefreshToken(refreshTokenDto.memberId());
 
-        if (refreshToken.isPresent() &&
-                refreshTokenDto.refreshTokenValue().equals(refreshToken.get().getToken())) {
+        if (refreshToken.isPresent()
+                && refreshTokenDto.refreshTokenValue().equals(refreshToken.get().getToken())) {
             return refreshTokenDto;
         }
 
@@ -79,7 +77,7 @@ public class JwtTokenService {
         }
 
         long remainingMs = jwtUtil.getRemainingExpirationMillis(accessToken);
-        long ttlSeconds  = remainingMs > 0 ? remainingMs / 1000 : 0;
+        long ttlSeconds = remainingMs > 0 ? remainingMs / 1000 : 0;
 
         BlackListToken black = BlackListToken.createBlackListToken(accessToken, ttlSeconds);
         blackListTokenRepository.save(black);

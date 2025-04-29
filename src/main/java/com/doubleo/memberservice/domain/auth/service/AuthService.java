@@ -20,9 +20,9 @@ public class AuthService {
     private final JwtTokenService jwtTokenService;
     private final BCryptPasswordEncoder encoder;
 
-    public LoginResponse loginMember(LoginRequest request){
+    public LoginResponse loginMember(LoginRequest request) {
         Member member = validateMemberByEmail(request.email());
-        if(!encoder.matches(request.password(), member.getPassword())){
+        if (!encoder.matches(request.password(), member.getPassword())) {
             throw new CommonException(MemberErrorCode.MEMBER_NOT_FOUND);
         }
         return getLoginResponse(member);
@@ -34,12 +34,16 @@ public class AuthService {
         jwtTokenService.putAccessTokenOnBlackList(accessTokenValue);
     }
 
-
-    private Member validateMemberByEmail(String email){
-        return memberRepository.findMemberByEmail(email).orElseThrow(() -> new CommonException(MemberErrorCode.MEMBER_NOT_FOUND));
+    private Member validateMemberByEmail(String email) {
+        return memberRepository
+                .findMemberByEmail(email)
+                .orElseThrow(() -> new CommonException(MemberErrorCode.MEMBER_NOT_FOUND));
     }
-    private void validateMemberById(Long memberId){
-         memberRepository.findById(memberId).orElseThrow(() -> new CommonException(MemberErrorCode.MEMBER_NOT_FOUND));
+
+    private void validateMemberById(Long memberId) {
+        memberRepository
+                .findById(memberId)
+                .orElseThrow(() -> new CommonException(MemberErrorCode.MEMBER_NOT_FOUND));
     }
 
     private LoginResponse getLoginResponse(Member member) {

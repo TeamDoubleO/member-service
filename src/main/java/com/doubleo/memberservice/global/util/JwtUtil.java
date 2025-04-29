@@ -8,11 +8,10 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
-
 import java.security.Key;
 import java.util.Date;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
@@ -35,14 +34,15 @@ public class JwtUtil {
         return buildAccessToken(memberId, issuedAt, expiredAt);
     }
 
-//    public RefreshTokenDto generateRefreshTokenDto(Long memberId) {
-//        Date issuedAt = new Date();
-//        Date expiredAt =
-//                new Date(issuedAt.getTime() + jwtProperties.refreshTokenExpirationMilliTime());
-//        String tokenValue = buildRefreshToken(memberId, issuedAt, expiredAt);
-//        return new RefreshTokenDto(
-//                memberId, tokenValue, jwtProperties.refreshTokenExpirationTime());
-//    }
+    //    public RefreshTokenDto generateRefreshTokenDto(Long memberId) {
+    //        Date issuedAt = new Date();
+    //        Date expiredAt =
+    //                new Date(issuedAt.getTime() +
+    // jwtProperties.refreshTokenExpirationMilliTime());
+    //        String tokenValue = buildRefreshToken(memberId, issuedAt, expiredAt);
+    //        return new RefreshTokenDto(
+    //                memberId, tokenValue, jwtProperties.refreshTokenExpirationTime());
+    //    }
 
     public String resolveToken(String headerValue) {
         if (headerValue != null && headerValue.startsWith("Bearer ")) {
@@ -50,6 +50,7 @@ public class JwtUtil {
         }
         return null;
     }
+
     public long getRemainingExpirationMillis(String tokenValue) {
         Jws<Claims> claims = getClaims(tokenValue, getAccessTokenKey());
         Date exp = claims.getBody().getExpiration();
@@ -61,8 +62,7 @@ public class JwtUtil {
             Jws<Claims> claims = getClaims(accessTokenValue, getAccessTokenKey());
 
             return AccessTokenDto.of(
-                    Long.parseLong(claims.getBody().getSubject()),
-                    accessTokenValue);
+                    Long.parseLong(claims.getBody().getSubject()), accessTokenValue);
         } catch (ExpiredJwtException e) {
             throw e;
         } catch (Exception e) {
@@ -104,8 +104,7 @@ public class JwtUtil {
         return Keys.hmacShaKeyFor(jwtProperties.refreshTokenSecret().getBytes());
     }
 
-    private String buildAccessToken(
-            Long memberId, Date issuedAt, Date expiredAt) {
+    private String buildAccessToken(Long memberId, Date issuedAt, Date expiredAt) {
         return Jwts.builder()
                 .setIssuer(jwtProperties.issuer())
                 .setSubject(memberId.toString())
@@ -115,8 +114,7 @@ public class JwtUtil {
                 .compact();
     }
 
-    private String buildRefreshToken(
-            Long memberId, Date issuedAt, Date expiredAt) {
+    private String buildRefreshToken(Long memberId, Date issuedAt, Date expiredAt) {
         return Jwts.builder()
                 .setIssuer(jwtProperties.issuer())
                 .setSubject(memberId.toString())

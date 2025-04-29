@@ -1,7 +1,6 @@
 package com.doubleo.memberservice.domain.auth.service;
 
 import com.doubleo.memberservice.domain.auth.domain.PrincipalDetails;
-import com.doubleo.memberservice.domain.member.domain.Member;
 import com.doubleo.memberservice.domain.member.repository.MemberRepository;
 import com.doubleo.memberservice.global.exception.CommonException;
 import com.doubleo.memberservice.global.exception.errorcode.MemberErrorCode;
@@ -20,8 +19,8 @@ public class PrincipalDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         return new PrincipalDetails(
-                memberRepository.findMemberByEmail(email).orElseThrow(
-                        () -> new CommonException(MemberErrorCode.MEMBER_NOT_FOUND))
-        );
+                memberRepository
+                        .findMemberByEmail(email)
+                        .orElseThrow(() -> new CommonException(MemberErrorCode.MEMBER_NOT_FOUND)));
     }
 }

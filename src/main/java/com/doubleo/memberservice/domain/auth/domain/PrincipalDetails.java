@@ -1,16 +1,16 @@
 package com.doubleo.memberservice.domain.auth.domain;
 
 import com.doubleo.memberservice.domain.member.domain.Member;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-
 import java.util.Collection;
 import java.util.List;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 public class PrincipalDetails implements UserDetails {
 
     private final Member member;
-    public PrincipalDetails(Member member){
+
+    public PrincipalDetails(Member member) {
         this.member = member;
     }
 
@@ -18,7 +18,10 @@ public class PrincipalDetails implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of();
     }
-    public Long getMemberId(){return member.getId();}
+
+    public Long getMemberId() {
+        return member.getId();
+    }
 
     @Override
     public String getPassword() {
@@ -30,4 +33,3 @@ public class PrincipalDetails implements UserDetails {
         return member.getEmail();
     }
 }
-

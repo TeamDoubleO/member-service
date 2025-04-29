@@ -12,6 +12,7 @@ public record JwtProperties(
     public Long accessTokenExpirationMilliTime() {
         return accessTokenExpirationTime * 1000;
     }
+
     public Long refreshTokenExpirationMilliTime() {
         return refreshTokenExpirationTime * 1000;
     }
