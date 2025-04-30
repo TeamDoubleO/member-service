@@ -23,7 +23,14 @@ public class MemberServiceImpl implements MemberService {
     public MemberCreateResponse createMember(MemberCreateRequest request) {
         validateMember(request.email());
         String encodedPw = passwordEncoder.encode(request.password());
-        Member member = memberRepository.save(Member.createMember(request.email(), encodedPw));
+        Member member =
+                memberRepository.save(
+                        Member.createMember(
+                                request.email(),
+                                encodedPw,
+                                request.name(),
+                                request.regNo(),
+                                request.contact()));
         return MemberCreateResponse.of(member);
     }
 
