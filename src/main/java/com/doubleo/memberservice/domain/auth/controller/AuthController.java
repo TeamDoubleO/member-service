@@ -7,6 +7,8 @@ import com.doubleo.memberservice.domain.auth.dto.response.LoginResponse;
 import com.doubleo.memberservice.domain.auth.service.AuthService;
 import com.doubleo.memberservice.domain.auth.service.JwtTokenService;
 import com.doubleo.memberservice.global.util.CookieUtil;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -18,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.WebUtils;
 
+@Tag(name = "1-2. Auth API", description = "회원 로그인/로그아웃/Refresh Token 관련 API")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/auth")
@@ -27,6 +30,7 @@ public class AuthController {
     private final CookieUtil cookieUtil;
     private final JwtTokenService jwtTokenService;
 
+    @Operation(summary = "회원 로그인", description = "회원 로그인을 처리합니다.")
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> memberLogin(@RequestBody LoginRequest request) {
         LoginResponse response = authService.loginMember(request);
@@ -36,6 +40,7 @@ public class AuthController {
         return ResponseEntity.ok().headers(headers).body(response);
     }
 
+    @Operation(summary = "회원 로그아웃", description = "회원 로그아웃을 처리합니다.")
     @PostMapping("/logout")
     public ResponseEntity<Void> memberLogout(
             @RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,
@@ -43,21 +48,22 @@ public class AuthController {
             HttpServletResponse response) {
         authService.logoutMember(authorizationHeader, memberId);
 
-        // 2) RefreshToken 쿠키를 즉시 만료시키는 Set-Cookie 헤더
         ResponseCookie clearCookie =
                 ResponseCookie.from("refreshToken", "")
                         .httpOnly(true)
                         .secure(true)
                         .path("/")
-                        .maxAge(0) // 즉시 만료
+                        .maxAge(0)
                         .sameSite("Strict")
                         .build();
         response.addHeader(HttpHeaders.SET_COOKIE, clearCookie.toString());
 
-        // 3) 바디 없이 204 No Content 반환
         return ResponseEntity.noContent().build();
     }
 
+    @Operation(
+            summary = "Access Token 재발급",
+            description = "유효한 RefreshToken 을 통해 AccessToken 을 재발급합니다.")
     @PostMapping("/reissue")
     public ResponseEntity<Void> tokenReissue(
             HttpServletRequest request, HttpServletResponse response) {
