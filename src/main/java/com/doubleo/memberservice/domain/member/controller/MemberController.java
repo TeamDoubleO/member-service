@@ -18,7 +18,7 @@ public class MemberController {
     private final MemberService memberService;
 
     @Operation(summary = "회원 가입", description = "회원을 생성합니다.")
-    @PostMapping("/create")
+    @PostMapping("/join")
     public MemberCreateResponse memberJoin(@RequestBody MemberCreateRequest request) {
         return memberService.createMember(request);
     }
