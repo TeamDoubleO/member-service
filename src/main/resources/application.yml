@@ -18,5 +18,6 @@ spring:
       - openfeign
       - datasource
       - jwt
+      - redis
       - eureka
       - actuator

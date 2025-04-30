@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor
+@Table(name = "`member`")
 public class Member extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,7 +26,7 @@ public class Member extends BaseTimeEntity {
     @Column(name = "member_name")
     private String name;
 
-    @Column(name = "regNo")
+    @Column(name = "member_reg_no")
     private String regNo;
 
     @Column(name = "member_contact")
