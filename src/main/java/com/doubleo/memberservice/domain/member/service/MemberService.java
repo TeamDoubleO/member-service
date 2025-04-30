@@ -1,3 +1,9 @@
 package com.doubleo.memberservice.domain.member.service;
 
-public interface MemberService {}
+import com.doubleo.memberservice.domain.member.dto.request.MemberCreateRequest;
+import com.doubleo.memberservice.domain.member.dto.response.MemberCreateResponse;
+
+public interface MemberService {
+
+    MemberCreateResponse createMember(MemberCreateRequest request);
+}

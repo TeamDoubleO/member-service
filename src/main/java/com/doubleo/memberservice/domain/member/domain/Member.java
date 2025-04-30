@@ -2,34 +2,31 @@ package com.doubleo.memberservice.domain.member.domain;
 
 import com.doubleo.memberservice.domain.common.model.BaseTimeEntity;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Getter
 @NoArgsConstructor
-@Table(name = "`member`")
 public class Member extends BaseTimeEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "member_id")
+    @Column(name = "member_id", nullable = false)
     private Long id;
 
-    @Column(name = "member_email")
+    @Column(name = "member_email", nullable = false, unique = true)
     private String email; // 정규화 추가
 
-    @Column(name = "member_password")
+    @Column(name = "member_password", nullable = false)
     private String password;
 
-    @Column(name = "member_name")
+    @Column(name = "member_name", nullable = false)
     private String name;
 
-    @Column(name = "member_reg_no")
+    @Column(name = "member_reg_no", nullable = false, unique = true)
     private String regNo;
 
-    @Column(name = "member_contact")
+    @Column(name = "member_contact", nullable = false)
     private String contact;
 
     @Builder(access = AccessLevel.PRIVATE)
