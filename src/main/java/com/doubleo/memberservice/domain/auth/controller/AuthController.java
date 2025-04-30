@@ -5,7 +5,7 @@ import com.doubleo.memberservice.domain.auth.dto.RefreshTokenDto;
 import com.doubleo.memberservice.domain.auth.dto.request.LoginRequest;
 import com.doubleo.memberservice.domain.auth.dto.response.LoginResponse;
 import com.doubleo.memberservice.domain.auth.service.AuthService;
-import com.doubleo.memberservice.domain.auth.service.JwtTokenService;
+import com.doubleo.memberservice.domain.auth.service.JwtTokenServiceImpl;
 import com.doubleo.memberservice.global.util.CookieUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -28,7 +28,7 @@ public class AuthController {
 
     private final AuthService authService;
     private final CookieUtil cookieUtil;
-    private final JwtTokenService jwtTokenService;
+    private final JwtTokenServiceImpl jwtTokenService;
 
     @Operation(summary = "회원 로그인", description = "회원 로그인을 처리합니다.")
     @PostMapping("/login")
