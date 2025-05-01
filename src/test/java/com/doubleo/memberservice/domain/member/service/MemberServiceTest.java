@@ -141,4 +141,21 @@ public class MemberServiceTest {
                     .hasMessage(MemberErrorCode.DUPLICATED_PASSWORD.getMessage());
         }
     }
+
+    @Nested
+    class deleteMember {
+
+        @Test
+        void 회원을_삭제하면_정상적으로_삭제된다() {
+            // given
+            given(memberRepository.findById(1L)).willReturn(Optional.of(member));
+            doNothing().when(memberRepository).delete(member);
+
+            // when
+            memberService.deleteMember(1L);
+
+            // then
+            verify(memberRepository).delete(member);
+        }
+    }
 }
