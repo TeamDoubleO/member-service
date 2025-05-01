@@ -1,6 +1,5 @@
 package com.doubleo.memberservice.domain.member.service;
 
-import com.doubleo.memberservice.domain.auth.service.JwtTokenService;
 import com.doubleo.memberservice.domain.member.domain.Member;
 import com.doubleo.memberservice.domain.member.dto.request.MemberCreateRequest;
 import com.doubleo.memberservice.domain.member.dto.request.MemberPwUpdateRequest;
@@ -21,7 +20,6 @@ public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
     private final BCryptPasswordEncoder passwordEncoder;
-    private final JwtTokenService jwtTokenService;
 
     @Override
     public MemberCreateResponse createMember(MemberCreateRequest request) {
