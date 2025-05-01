@@ -4,6 +4,7 @@ import com.doubleo.memberservice.domain.member.domain.Member;
 import com.doubleo.memberservice.domain.member.dto.request.MemberCreateRequest;
 import com.doubleo.memberservice.domain.member.dto.request.MemberPwUpdateRequest;
 import com.doubleo.memberservice.domain.member.dto.response.MemberCreateResponse;
+import com.doubleo.memberservice.domain.member.dto.response.MemberInfoResponse;
 import com.doubleo.memberservice.domain.member.repository.MemberRepository;
 import com.doubleo.memberservice.global.exception.CommonException;
 import com.doubleo.memberservice.global.exception.errorcode.MemberErrorCode;
@@ -36,15 +37,21 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
+    public MemberInfoResponse getMemberInfo(Long memberId) {
+        Member member = findMember(memberId);
+        return MemberInfoResponse.of(member);
+    }
+
+    @Override
     public void updateMemberPassword(MemberPwUpdateRequest request) {
-        Member member = getMember(request.memberId());
+        Member member = findMember(request.memberId());
         validateMemberPassword(request.passwordOriginal(), member.getPassword());
         isPasswordNew(request.passwordNew(), member.getPassword());
         member.updateMemberPassword(passwordEncoder.encode(request.passwordNew()));
     }
 
     // util
-    private Member getMember(Long memberId) {
+    private Member findMember(Long memberId) {
         return memberRepository
                 .findById(memberId)
                 .orElseThrow(() -> new CommonException(MemberErrorCode.MEMBER_NOT_FOUND));

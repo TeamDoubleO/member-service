@@ -4,6 +4,7 @@ import com.doubleo.memberservice.domain.member.domain.Member;
 import com.doubleo.memberservice.domain.member.dto.request.MemberCreateRequest;
 import com.doubleo.memberservice.domain.member.dto.request.MemberPwUpdateRequest;
 import com.doubleo.memberservice.domain.member.dto.response.MemberCreateResponse;
+import com.doubleo.memberservice.domain.member.dto.response.MemberInfoResponse;
 import com.doubleo.memberservice.domain.member.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -25,17 +26,11 @@ public class MemberController {
         return memberService.createMember(request);
     }
 
-    @Operation(summary = "회원 개별 정보 조회", description = "회원 개별 정보를 조회합니다.")
-    @GetMapping("/{memberId}")
-    public ResponseEntity<Member> memberGet() {
-        return ResponseEntity.ok(new Member());
+    @Operation(summary = "회원 본인 정보 조회", description = "회원 본인 정보를 조회합니다.")
+    @GetMapping("/me")
+    public MemberInfoResponse memberGet(@RequestHeader("X-Member-Id") Long memberId) {
+        return memberService.getMemberInfo(memberId);
     }
-
-    // 회원 전체 목록 조회
-    //    @GetMapping("/")
-    //    public ResponseEntity<Member> memberListGet() {
-    //        return ResponseEntity.ok(new Member());
-    //    }
 
     @Operation(summary = "회원 비밀번호 업데이트", description = "회원 비밀번호를 업데이트합니다.")
     @PatchMapping("/password")
