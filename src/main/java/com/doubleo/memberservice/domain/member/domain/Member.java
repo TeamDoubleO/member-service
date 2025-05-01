@@ -17,7 +17,7 @@ public class Member extends BaseTimeEntity {
     @Column(name = "member_email", nullable = false, unique = true)
     private String email; // 정규화 추가
 
-    @Column(name = "member_password", nullable = false)
+    @Column(name = "member_password", nullable = false, length = 100)
     private String password;
 
     @Column(name = "member_name", nullable = false)
@@ -47,5 +47,9 @@ public class Member extends BaseTimeEntity {
                 .regNo(regNo)
                 .contact(contact)
                 .build();
+    }
+
+    public void updateMemberPassword(String passwordNew) {
+        this.password = passwordNew;
     }
 }

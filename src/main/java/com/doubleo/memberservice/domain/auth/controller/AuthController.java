@@ -44,7 +44,7 @@ public class AuthController {
     @PostMapping("/logout")
     public ResponseEntity<Void> memberLogout(
             @RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,
-            @RequestHeader("X-User-Id") Long memberId,
+            @RequestHeader("X-Member-Id") Long memberId,
             HttpServletResponse response) {
         authService.logoutMember(authorizationHeader, memberId);
 
