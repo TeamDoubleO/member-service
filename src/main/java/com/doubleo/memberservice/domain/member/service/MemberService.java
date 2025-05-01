@@ -11,5 +11,5 @@ public interface MemberService {
 
     MemberInfoResponse getMemberInfo(Long memberId);
 
-    void updateMemberPassword(MemberPwUpdateRequest request);
+    void updateMemberPassword(Long memberId, MemberPwUpdateRequest request);
 }

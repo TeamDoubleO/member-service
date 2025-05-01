@@ -103,7 +103,7 @@ public class MemberServiceTest {
 
             // when
             memberService.updateMemberPassword(
-                    new MemberPwUpdateRequest(1L, password, newPassword));
+                    1L, new MemberPwUpdateRequest(password, newPassword));
 
             // then
             assertThat(member.getPassword()).isEqualTo(encodedNewPassword);
@@ -119,8 +119,9 @@ public class MemberServiceTest {
             assertThatThrownBy(
                             () ->
                                     memberService.updateMemberPassword(
+                                            1L,
                                             new MemberPwUpdateRequest(
-                                                    1L, "wrongPassword", "newPassword")))
+                                                    "wrongPassword", "newPassword")))
                     .isInstanceOf(CommonException.class)
                     .hasMessage(MemberErrorCode.INVALID_PASSWORD.getMessage());
         }
@@ -135,7 +136,7 @@ public class MemberServiceTest {
             assertThatThrownBy(
                             () ->
                                     memberService.updateMemberPassword(
-                                            new MemberPwUpdateRequest(1L, password, password)))
+                                            1L, new MemberPwUpdateRequest(password, password)))
                     .isInstanceOf(CommonException.class)
                     .hasMessage(MemberErrorCode.DUPLICATED_PASSWORD.getMessage());
         }

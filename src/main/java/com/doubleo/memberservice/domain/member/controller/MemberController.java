@@ -1,6 +1,5 @@
 package com.doubleo.memberservice.domain.member.controller;
 
-import com.doubleo.memberservice.domain.member.domain.Member;
 import com.doubleo.memberservice.domain.member.dto.request.MemberCreateRequest;
 import com.doubleo.memberservice.domain.member.dto.request.MemberPwUpdateRequest;
 import com.doubleo.memberservice.domain.member.dto.response.MemberCreateResponse;
@@ -21,7 +20,7 @@ public class MemberController {
     private final MemberService memberService;
 
     @Operation(summary = "회원 가입", description = "회원을 생성합니다.")
-    @PostMapping("/join")
+    @PostMapping
     public MemberCreateResponse memberJoin(@RequestBody MemberCreateRequest request) {
         return memberService.createMember(request);
     }
@@ -33,17 +32,18 @@ public class MemberController {
     }
 
     @Operation(summary = "회원 비밀번호 업데이트", description = "회원 비밀번호를 업데이트합니다.")
-    @PatchMapping("/password")
+    @PatchMapping("/me/password")
     public ResponseEntity<Void> memberPasswordUpdate(
+            @RequestHeader("X-Member-Id") Long memberId,
             @Valid @RequestBody MemberPwUpdateRequest request) {
-        memberService.updateMemberPassword(request);
+        memberService.updateMemberPassword(memberId, request);
         return ResponseEntity.ok().build();
     }
 
     // 회원 탈퇴
     @Operation(summary = "회원 탈퇴", description = "회원 정보를 삭제합니다.")
-    @DeleteMapping("/{memberId}")
-    public ResponseEntity<Member> memberDelete() {
-        return ResponseEntity.ok(new Member());
+    @DeleteMapping
+    public ResponseEntity<Void> memberDelete(@RequestHeader("X-Member-Id") Long memberId) {
+        return ResponseEntity.ok().build();
     }
 }

@@ -43,8 +43,8 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public void updateMemberPassword(MemberPwUpdateRequest request) {
-        Member member = findMember(request.memberId());
+    public void updateMemberPassword(Long memberId, MemberPwUpdateRequest request) {
+        Member member = findMember(memberId);
         validateMemberPassword(request.passwordOriginal(), member.getPassword());
         isPasswordNew(request.passwordNew(), member.getPassword());
         member.updateMemberPassword(passwordEncoder.encode(request.passwordNew()));
