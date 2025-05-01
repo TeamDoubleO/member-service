@@ -7,6 +7,7 @@ import com.doubleo.memberservice.domain.member.domain.Member;
 import com.doubleo.memberservice.domain.member.dto.request.MemberCreateRequest;
 import com.doubleo.memberservice.domain.member.dto.request.MemberPwUpdateRequest;
 import com.doubleo.memberservice.domain.member.dto.response.MemberCreateResponse;
+import com.doubleo.memberservice.domain.member.dto.response.MemberInfoResponse;
 import com.doubleo.memberservice.domain.member.repository.MemberRepository;
 import com.doubleo.memberservice.global.exception.CommonException;
 import com.doubleo.memberservice.global.exception.errorcode.MemberErrorCode;
@@ -64,6 +65,26 @@ public class MemberServiceTest {
             assertThat(response).isNotNull();
             assertThat(response.email()).isEqualTo(email);
             verify(memberRepository).save(any(Member.class));
+        }
+    }
+
+    @Nested
+    class getMember {
+
+        @Test
+        void 회원정보_조회하면_정상적으로_반환된다() {
+            // given
+            given(memberRepository.findById(1L)).willReturn(Optional.of(member));
+
+            // when
+            MemberInfoResponse response = memberService.getMemberInfo(member.getId());
+
+            // then
+            assertThat(response.memberId()).isEqualTo(member.getId());
+            assertThat(response.email()).isEqualTo(member.getEmail());
+            assertThat(response.name()).isEqualTo(member.getName());
+            assertThat(response.regNo()).isEqualTo(member.getRegNo());
+            assertThat(response.contact()).isEqualTo(member.getContact());
         }
     }
 
