@@ -1,5 +1,6 @@
 package com.doubleo.memberservice.domain.member.controller;
 
+import com.doubleo.memberservice.domain.auth.service.AuthService;
 import com.doubleo.memberservice.domain.member.dto.request.MemberCreateRequest;
 import com.doubleo.memberservice.domain.member.dto.request.MemberPwUpdateRequest;
 import com.doubleo.memberservice.domain.member.dto.response.MemberCreateResponse;
@@ -9,6 +10,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/members")
 public class MemberController {
     private final MemberService memberService;
+    private final AuthService authService;
 
     @Operation(summary = "회원 가입", description = "회원을 생성합니다.")
     @PostMapping
@@ -40,10 +43,13 @@ public class MemberController {
         return ResponseEntity.ok().build();
     }
 
-    // 회원 탈퇴
     @Operation(summary = "회원 탈퇴", description = "회원 정보를 삭제합니다.")
     @DeleteMapping
-    public ResponseEntity<Void> memberDelete(@RequestHeader("X-Member-Id") Long memberId) {
+    public ResponseEntity<Void> memberDelete(
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,
+            @RequestHeader("X-Member-Id") Long memberId) {
+        authService.logoutMember(authorizationHeader, memberId);
+        memberService.deleteMember(memberId);
         return ResponseEntity.ok().build();
     }
 }

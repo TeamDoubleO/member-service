@@ -12,4 +12,6 @@ public interface MemberService {
     MemberInfoResponse getMemberInfo(Long memberId);
 
     void updateMemberPassword(Long memberId, MemberPwUpdateRequest request);
+
+    void deleteMember(Long memberId);
 }
