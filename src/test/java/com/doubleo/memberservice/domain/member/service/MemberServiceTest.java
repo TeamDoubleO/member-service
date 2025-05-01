@@ -69,7 +69,7 @@ public class MemberServiceTest {
     }
 
     @Nested
-    class getMember {
+    class getMemberInfo {
 
         @Test
         void 회원정보_조회하면_정상적으로_반환된다() {
@@ -89,7 +89,7 @@ public class MemberServiceTest {
     }
 
     @Nested
-    class updateMember {
+    class updateMemberPassword {
 
         @Test
         void 비밀번호_변경하면_정상적으로_변경된다() {
