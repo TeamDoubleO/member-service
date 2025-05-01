@@ -24,7 +24,7 @@ public class MemberController {
 
     @Operation(summary = "회원 가입", description = "회원을 생성합니다.")
     @PostMapping
-    public MemberCreateResponse memberJoin(@RequestBody MemberCreateRequest request) {
+    public MemberCreateResponse memberJoin(@Valid @RequestBody MemberCreateRequest request) {
         return memberService.createMember(request);
     }
 
