@@ -5,6 +5,7 @@ import static org.mockito.BDDMockito.*;
 
 import com.doubleo.memberservice.domain.member.domain.Member;
 import com.doubleo.memberservice.domain.member.dto.request.MemberCreateRequest;
+import com.doubleo.memberservice.domain.member.dto.request.MemberPwCheckRequest;
 import com.doubleo.memberservice.domain.member.dto.request.MemberPwUpdateRequest;
 import com.doubleo.memberservice.domain.member.dto.response.MemberCreateResponse;
 import com.doubleo.memberservice.domain.member.dto.response.MemberInfoResponse;
@@ -141,6 +142,25 @@ public class MemberServiceTest {
                                             1L, new MemberPwUpdateRequest(password, password)))
                     .isInstanceOf(CommonException.class)
                     .hasMessage(MemberErrorCode.DUPLICATED_PASSWORD.getMessage());
+        }
+    }
+
+    @Nested
+    class checkMemberPassword {
+
+        @Test
+        void 비밀번호가_일치하면_통과한다() {
+            // given
+            String password = "password";
+
+            given(memberRepository.findById(1L)).willReturn(Optional.of(member));
+            given(bCryptPasswordEncoder.matches(password, "encoded")).willReturn(true);
+
+            // when
+            memberService.checkMemberPassword(1L, new MemberPwCheckRequest(password));
+
+            // then
+            assertThat(member.getPassword()).isEqualTo("encoded");
         }
     }
 

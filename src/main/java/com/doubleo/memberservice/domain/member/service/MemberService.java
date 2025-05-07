@@ -1,6 +1,7 @@
 package com.doubleo.memberservice.domain.member.service;
 
 import com.doubleo.memberservice.domain.member.dto.request.MemberCreateRequest;
+import com.doubleo.memberservice.domain.member.dto.request.MemberPwCheckRequest;
 import com.doubleo.memberservice.domain.member.dto.request.MemberPwUpdateRequest;
 import com.doubleo.memberservice.domain.member.dto.response.MemberCreateResponse;
 import com.doubleo.memberservice.domain.member.dto.response.MemberInfoResponse;
@@ -14,4 +15,6 @@ public interface MemberService {
     void updateMemberPassword(Long memberId, MemberPwUpdateRequest request);
 
     void deleteMember(Long memberId);
+
+    void checkMemberPassword(Long memberId, MemberPwCheckRequest request);
 }
