@@ -33,7 +33,7 @@ public class MemberServiceTest {
     private final String email = "test@test.com";
     private final String password = "password";
     private final String name = "name";
-    private final String regNo = "991111-1234567";
+    private final String regNo = "031111-3234567";
     private final String contact = "contact";
 
     private Member member;
@@ -54,6 +54,7 @@ public class MemberServiceTest {
                     new MemberCreateRequest(email, password, name, regNo, contact);
             String encodedPassword = "encodedPassword";
             Member savedMember = Member.createMember(email, encodedPassword, name, regNo, contact);
+            System.out.println(savedMember.getBirthDate());
 
             given(bCryptPasswordEncoder.encode(password)).willReturn(encodedPassword);
             given(memberRepository.save(any(Member.class))).willReturn(savedMember);
@@ -83,8 +84,9 @@ public class MemberServiceTest {
             assertThat(response.memberId()).isEqualTo(member.getId());
             assertThat(response.email()).isEqualTo(member.getEmail());
             assertThat(response.name()).isEqualTo(member.getName());
-            assertThat(response.regNo()).isEqualTo(member.getRegNo());
+            assertThat(response.birthDate()).isEqualTo(member.getBirthDate());
             assertThat(response.contact()).isEqualTo(member.getContact());
+            System.out.println(response.birthDate());
         }
     }
 
