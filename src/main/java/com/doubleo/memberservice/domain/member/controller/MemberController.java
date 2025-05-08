@@ -2,6 +2,7 @@ package com.doubleo.memberservice.domain.member.controller;
 
 import com.doubleo.memberservice.domain.auth.service.AuthService;
 import com.doubleo.memberservice.domain.member.dto.request.MemberCreateRequest;
+import com.doubleo.memberservice.domain.member.dto.request.MemberPwCheckRequest;
 import com.doubleo.memberservice.domain.member.dto.request.MemberPwUpdateRequest;
 import com.doubleo.memberservice.domain.member.dto.response.MemberCreateResponse;
 import com.doubleo.memberservice.domain.member.dto.response.MemberInfoResponse;
@@ -40,6 +41,15 @@ public class MemberController {
             @RequestHeader("X-Member-Id") Long memberId,
             @Valid @RequestBody MemberPwUpdateRequest request) {
         memberService.updateMemberPassword(memberId, request);
+        return ResponseEntity.ok().build();
+    }
+
+    @Operation(summary = "회원 비밀번호 화인", description = "my page 진입 시 회원 비밀번호를 확인합니다.")
+    @GetMapping("/me/password")
+    public ResponseEntity<Void> memberPasswordCheck(
+            @RequestHeader("X-Member-Id") Long memberId,
+            @Valid @RequestBody MemberPwCheckRequest request) {
+        memberService.checkMemberPassword(memberId, request);
         return ResponseEntity.ok().build();
     }
 

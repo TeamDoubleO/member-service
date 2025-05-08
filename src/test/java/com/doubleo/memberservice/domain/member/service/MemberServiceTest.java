@@ -5,6 +5,7 @@ import static org.mockito.BDDMockito.*;
 
 import com.doubleo.memberservice.domain.member.domain.Member;
 import com.doubleo.memberservice.domain.member.dto.request.MemberCreateRequest;
+import com.doubleo.memberservice.domain.member.dto.request.MemberPwCheckRequest;
 import com.doubleo.memberservice.domain.member.dto.request.MemberPwUpdateRequest;
 import com.doubleo.memberservice.domain.member.dto.response.MemberCreateResponse;
 import com.doubleo.memberservice.domain.member.dto.response.MemberInfoResponse;
@@ -33,7 +34,7 @@ public class MemberServiceTest {
     private final String email = "test@test.com";
     private final String password = "password";
     private final String name = "name";
-    private final String regNo = "991111-1234567";
+    private final String regNo = "031111-3234567";
     private final String contact = "contact";
 
     private Member member;
@@ -54,6 +55,7 @@ public class MemberServiceTest {
                     new MemberCreateRequest(email, password, name, regNo, contact);
             String encodedPassword = "encodedPassword";
             Member savedMember = Member.createMember(email, encodedPassword, name, regNo, contact);
+            System.out.println(savedMember.getBirthDate());
 
             given(bCryptPasswordEncoder.encode(password)).willReturn(encodedPassword);
             given(memberRepository.save(any(Member.class))).willReturn(savedMember);
@@ -83,8 +85,9 @@ public class MemberServiceTest {
             assertThat(response.memberId()).isEqualTo(member.getId());
             assertThat(response.email()).isEqualTo(member.getEmail());
             assertThat(response.name()).isEqualTo(member.getName());
-            assertThat(response.regNo()).isEqualTo(member.getRegNo());
+            assertThat(response.birthDate()).isEqualTo(member.getBirthDate());
             assertThat(response.contact()).isEqualTo(member.getContact());
+            System.out.println(response.birthDate());
         }
     }
 
@@ -139,6 +142,25 @@ public class MemberServiceTest {
                                             1L, new MemberPwUpdateRequest(password, password)))
                     .isInstanceOf(CommonException.class)
                     .hasMessage(MemberErrorCode.DUPLICATED_PASSWORD.getMessage());
+        }
+    }
+
+    @Nested
+    class checkMemberPassword {
+
+        @Test
+        void 비밀번호가_일치하면_통과한다() {
+            // given
+            String password = "password";
+
+            given(memberRepository.findById(1L)).willReturn(Optional.of(member));
+            given(bCryptPasswordEncoder.matches(password, "encoded")).willReturn(true);
+
+            // when
+            memberService.checkMemberPassword(1L, new MemberPwCheckRequest(password));
+
+            // then
+            assertThat(member.getPassword()).isEqualTo("encoded");
         }
     }
 

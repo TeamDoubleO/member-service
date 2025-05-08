@@ -2,16 +2,17 @@ package com.doubleo.memberservice.domain.member.service;
 
 import com.doubleo.memberservice.domain.member.domain.Member;
 import com.doubleo.memberservice.domain.member.dto.request.MemberCreateRequest;
+import com.doubleo.memberservice.domain.member.dto.request.MemberPwCheckRequest;
 import com.doubleo.memberservice.domain.member.dto.request.MemberPwUpdateRequest;
 import com.doubleo.memberservice.domain.member.dto.response.MemberCreateResponse;
 import com.doubleo.memberservice.domain.member.dto.response.MemberInfoResponse;
 import com.doubleo.memberservice.domain.member.repository.MemberRepository;
 import com.doubleo.memberservice.global.exception.CommonException;
 import com.doubleo.memberservice.global.exception.errorcode.MemberErrorCode;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
@@ -37,17 +38,25 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public MemberInfoResponse getMemberInfo(Long memberId) {
         Member member = findMember(memberId);
         return MemberInfoResponse.of(member);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public void updateMemberPassword(Long memberId, MemberPwUpdateRequest request) {
         Member member = findMember(memberId);
         validateMemberPassword(request.passwordOriginal(), member.getPassword());
         isPasswordNew(request.passwordNew(), member.getPassword());
         member.updateMemberPassword(passwordEncoder.encode(request.passwordNew()));
+    }
+
+    @Override
+    public void checkMemberPassword(Long memberId, MemberPwCheckRequest request) {
+        Member member = findMember(memberId);
+        validateMemberPassword(request.password(), member.getPassword());
     }
 
     @Override
