@@ -2,6 +2,7 @@ package com.doubleo.memberservice.domain.auth.service;
 
 import com.doubleo.memberservice.domain.auth.dto.AccessTokenDto;
 import com.doubleo.memberservice.domain.auth.dto.RefreshTokenDto;
+import java.util.Optional;
 
 public interface JwtTokenService {
 
@@ -18,7 +19,7 @@ public interface JwtTokenService {
     RefreshTokenDto retrieveRefreshToken(String refreshTokenValue);
 
     // AccessToken 만료 여부 검증 후 재발급
-    AccessTokenDto reissueAccessTokenIfExpired(String accessTokenValue);
+    Optional<AccessTokenDto> reissueAccessTokenIfExpired(String accessTokenValue);
 
     // 사용하지 않는 AccessToken BlackList 등록
     void putAccessTokenOnBlackList(String accessTokenValue);

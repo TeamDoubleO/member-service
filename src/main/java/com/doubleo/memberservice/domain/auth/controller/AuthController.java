@@ -1,18 +1,19 @@
 package com.doubleo.memberservice.domain.auth.controller;
 
-import com.doubleo.memberservice.domain.auth.dto.AccessTokenDto;
 import com.doubleo.memberservice.domain.auth.dto.RefreshTokenDto;
 import com.doubleo.memberservice.domain.auth.dto.request.LoginRequest;
 import com.doubleo.memberservice.domain.auth.dto.response.LoginResponse;
 import com.doubleo.memberservice.domain.auth.service.AuthService;
 import com.doubleo.memberservice.domain.auth.service.JwtTokenService;
 import com.doubleo.memberservice.global.util.CookieUtil;
+import com.doubleo.memberservice.global.util.JwtUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
@@ -20,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.WebUtils;
 
+@Slf4j
 @Tag(name = "1-2. Auth API", description = "회원 로그인/로그아웃/Refresh Token 관련 API")
 @RestController
 @RequiredArgsConstructor
@@ -29,6 +31,7 @@ public class AuthController {
     private final AuthService authService;
     private final CookieUtil cookieUtil;
     private final JwtTokenService jwtTokenService;
+    private final JwtUtil jwtUtil;
 
     @Operation(summary = "회원 로그인", description = "회원 로그인을 처리합니다.")
     @PostMapping("/login")
@@ -67,31 +70,30 @@ public class AuthController {
     @PostMapping("/reissue")
     public ResponseEntity<Void> tokenReissue(
             HttpServletRequest request, HttpServletResponse response) {
-        String oldAccessToken = extractAccessTokenFromHeader(request);
+        String oldAccessToken = jwtUtil.resolveToken(request.getHeader(HttpHeaders.AUTHORIZATION));
         String refreshToken = extractRefreshTokenFromCookie(request);
 
+        log.info("oldAccessToken: {}, refreshToken: {}", oldAccessToken, refreshToken);
         RefreshTokenDto refreshTokenDto = jwtTokenService.retrieveRefreshToken(refreshToken);
         if (refreshTokenDto == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        AccessTokenDto newAccessTokenDto =
-                jwtTokenService.reissueAccessTokenIfExpired(oldAccessToken);
-        response.addHeader(
-                HttpHeaders.AUTHORIZATION, "Bearer " + newAccessTokenDto.accessTokenValue());
-
-        return ResponseEntity.ok().build();
+        return jwtTokenService
+                .reissueAccessTokenIfExpired(oldAccessToken)
+                .map(
+                        newToken -> {
+                            // 새 토큰이 존재할 때 헤더에 담고 200 OK 리턴
+                            response.setHeader(
+                                    HttpHeaders.AUTHORIZATION,
+                                    "Bearer " + newToken.accessTokenValue());
+                            return ResponseEntity.ok().<Void>build();
+                        })
+                // 없으면 204 No Content 리턴
+                .orElseGet(() -> ResponseEntity.noContent().build());
     }
 
     private String extractRefreshTokenFromCookie(HttpServletRequest request) {
         Cookie cookie = WebUtils.getCookie(request, "refreshToken");
         return (cookie != null) ? cookie.getValue() : null;
-    }
-
-    private String extractAccessTokenFromHeader(HttpServletRequest request) {
-        String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            return authorizationHeader.substring(7);
-        }
-        return null;
     }
 }
