@@ -11,7 +11,7 @@ public enum MemberErrorCode implements BaseErrorCode {
     MEMBER_ALREADY_EXISTS(HttpStatus.CONFLICT, "이미 존재하는 회원입니다."),
     INVALID_PASSWORD(HttpStatus.BAD_REQUEST, "유효한 비밀번호가 아닙니다."),
     DUPLICATED_PASSWORD(HttpStatus.CONFLICT, "변경되는 비밀번호는 기존 비밀번호와 동일할 수 없습니다."),
-    INVALID_REGISTRATION_NUMBER(HttpStatus.BAD_REQUEST, "변경되는 비밀번호는 기존 비밀번호와 동일할 수 없습니다.");
+    INVALID_REGISTRATION_NUMBER(HttpStatus.BAD_REQUEST, "유효한 주민등록번호가 아닙니다.");
 
     private final HttpStatus httpStatus;
     private final String message;
