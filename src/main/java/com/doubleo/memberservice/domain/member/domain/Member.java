@@ -1,7 +1,10 @@
 package com.doubleo.memberservice.domain.member.domain;
 
 import com.doubleo.memberservice.domain.common.model.BaseTimeEntity;
+import com.doubleo.memberservice.global.exception.CommonException;
+import com.doubleo.memberservice.global.exception.errorcode.MemberErrorCode;
 import jakarta.persistence.*;
+import java.time.LocalDate;
 import lombok.*;
 
 @Entity
@@ -27,7 +30,7 @@ public class Member extends BaseTimeEntity {
     private String regNo;
 
     @Column(name = "member_birth_date", nullable = false)
-    private String birthDate;
+    private LocalDate birthDate;
 
     @Column(name = "member_contact", nullable = false)
     private String contact;
@@ -37,7 +40,7 @@ public class Member extends BaseTimeEntity {
             String email,
             String password,
             String regNo,
-            String birthDate,
+            LocalDate birthDate,
             String name,
             String contact) {
         this.email = email;
@@ -54,7 +57,7 @@ public class Member extends BaseTimeEntity {
                 .email(email)
                 .password(password)
                 .name(name)
-                .regNo(regNo)
+                .regNo(validateRegNo(regNo))
                 .birthDate(extractBirthDateFromRegNo(regNo))
                 .contact(contact)
                 .build();
@@ -64,9 +67,31 @@ public class Member extends BaseTimeEntity {
         this.password = passwordNew;
     }
 
-    private static String extractBirthDateFromRegNo(String regNo) {
+    private static String validateRegNo(String regNo) {
+        // 형식 정규화
+        if (!regNo.matches("^\\d{6}-[1-4|5-8]\\d{6}$")) {
+            throw new CommonException(MemberErrorCode.INVALID_REGISTRATION_NUMBER);
+        }
+        return regNo;
+
+        //        String digits = regNo.replace("-", "");
+        //        // 가중치 곱 계산
+        //        int[] weights = {2, 3, 4, 5, 6, 7, 8, 9, 2, 3, 4, 5};
+        //        int sum = 0;
+        //
+        //        for (int i = 0; i < 12; i++) {
+        //            sum += (digits.charAt(i) - '0') * weights[i];
+        //        }
+        //        int checkDigit = (11 - (sum % 11)) % 10;
+        //        // 마지막 자리 비교
+        //        if(checkDigit != (digits.charAt(12) - '0')){
+        //            throw new CommonException(MemberErrorCode.INVALID_REGISTRATION_NUMBER);
+        //        }
+    }
+
+    private static LocalDate extractBirthDateFromRegNo(String regNo) {
         if (regNo == null || regNo.length() != 14 || regNo.charAt(6) != '-') {
-            return "NULL";
+            throw new CommonException(MemberErrorCode.INVALID_REGISTRATION_NUMBER);
         }
         String[] parts = regNo.split("-");
         String birth = parts[0];
@@ -87,13 +112,11 @@ public class Member extends BaseTimeEntity {
                 century = "20";
                 break;
             default:
-                return "NULL";
+                throw new CommonException(MemberErrorCode.INVALID_REGISTRATION_NUMBER);
         }
-        return century
-                + birth.substring(0, 2)
-                + "-"
-                + birth.substring(2, 4)
-                + "-"
-                + birth.substring(4, 6);
+        return LocalDate.of(
+                Integer.parseInt(century + birth.substring(0, 2)),
+                Integer.parseInt(birth.substring(2, 4)),
+                Integer.parseInt(birth.substring(4, 6)));
     }
 }
