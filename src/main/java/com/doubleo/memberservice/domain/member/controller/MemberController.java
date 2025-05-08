@@ -45,7 +45,7 @@ public class MemberController {
     }
 
     @Operation(summary = "회원 비밀번호 화인", description = "my page 진입 시 회원 비밀번호를 확인합니다.")
-    @GetMapping("/me/password")
+    @PostMapping("/me/password")
     public ResponseEntity<Void> memberPasswordCheck(
             @RequestHeader("X-Member-Id") Long memberId,
             @Valid @RequestBody MemberPwCheckRequest request) {
