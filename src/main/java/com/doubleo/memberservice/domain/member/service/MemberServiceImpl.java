@@ -45,7 +45,6 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public void updateMemberPassword(Long memberId, MemberPwUpdateRequest request) {
         Member member = findMember(memberId);
         validateMemberPassword(request.passwordOriginal(), member.getPassword());
@@ -54,6 +53,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public void checkMemberPassword(Long memberId, MemberPwCheckRequest request) {
         Member member = findMember(memberId);
         validateMemberPassword(request.password(), member.getPassword());
