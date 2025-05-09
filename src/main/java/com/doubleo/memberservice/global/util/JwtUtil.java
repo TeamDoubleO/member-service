@@ -108,6 +108,7 @@ public class JwtUtil {
         return Jwts.builder()
                 .setIssuer(jwtProperties.issuer())
                 .setSubject(memberId.toString())
+                .claim("platform", Platform.MOBILE.name())
                 .setIssuedAt(issuedAt)
                 .setExpiration(expiredAt)
                 .signWith(getAccessTokenKey())
