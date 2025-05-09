@@ -110,6 +110,7 @@ public class MemberServiceTest {
 
             // then
             assertThat(member.getPassword()).isEqualTo(encodedNewPassword);
+            System.out.println(member.getPassword());
         }
 
         @Test
