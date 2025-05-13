@@ -42,3 +42,6 @@ out/
 ### .env ###
 .env
 
+### gradle.properties ###
+gradle.properties
+
