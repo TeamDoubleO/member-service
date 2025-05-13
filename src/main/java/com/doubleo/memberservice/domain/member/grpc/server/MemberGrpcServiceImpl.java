@@ -26,7 +26,7 @@ public class MemberGrpcServiceImpl extends MemberServiceGrpc.MemberServiceImplBa
                                             .setMemberId(res.getId())
                                             .setMemberEmail(res.getEmail())
                                             .setMemberName(res.getName())
-                                            .setMemberRegNo(res.getName())
+                                            .setMemberRegNo(res.getRegNo())
                                             .setMemberContact(res.getContact())
                                             .build();
                             responseObserver.onNext(resp);
