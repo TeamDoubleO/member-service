@@ -7,8 +7,10 @@ import com.doubleo.memberservice.domain.member.dto.request.MemberPwUpdateRequest
 import com.doubleo.memberservice.domain.member.dto.response.MemberCreateResponse;
 import com.doubleo.memberservice.domain.member.dto.response.MemberInfoResponse;
 import com.doubleo.memberservice.domain.member.service.MemberService;
+import com.doubleo.memberservice.global.util.CookieUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 public class MemberController {
     private final MemberService memberService;
     private final AuthService authService;
+    private final CookieUtil cookieUtil;
 
     @Operation(summary = "회원 가입", description = "회원을 생성합니다.")
     @PostMapping
@@ -57,9 +60,13 @@ public class MemberController {
     @DeleteMapping
     public ResponseEntity<Void> memberDelete(
             @RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,
-            @RequestHeader("X-Member-Id") Long memberId) {
+            @RequestHeader("X-Member-Id") Long memberId,
+            HttpServletResponse response) {
         authService.logoutMember(authorizationHeader, memberId);
         memberService.deleteMember(memberId);
+        HttpHeaders headers = cookieUtil.deleteRefreshTokenCookie();
+        response.addHeader(HttpHeaders.SET_COOKIE, headers.getFirst(HttpHeaders.SET_COOKIE));
+
         return ResponseEntity.ok().build();
     }
 }

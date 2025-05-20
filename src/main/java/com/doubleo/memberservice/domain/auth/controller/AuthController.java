@@ -16,7 +16,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.WebUtils;
@@ -50,16 +49,8 @@ public class AuthController {
             @RequestHeader("X-Member-Id") Long memberId,
             HttpServletResponse response) {
         authService.logoutMember(authorizationHeader, memberId);
-
-        ResponseCookie clearCookie =
-                ResponseCookie.from("refreshToken", "")
-                        .httpOnly(true)
-                        .secure(true)
-                        .path("/")
-                        .maxAge(0)
-                        .sameSite("Strict")
-                        .build();
-        response.addHeader(HttpHeaders.SET_COOKIE, clearCookie.toString());
+        HttpHeaders headers = cookieUtil.deleteRefreshTokenCookie();
+        response.addHeader(HttpHeaders.SET_COOKIE, headers.getFirst(HttpHeaders.SET_COOKIE));
 
         return ResponseEntity.noContent().build();
     }
