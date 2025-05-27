@@ -1,7 +1,7 @@
 package com.doubleo.memberservice.domain.member.grpc.server;
 
 import com.doubleo.memberservice.domain.member.repository.MemberRepository;
-import com.doubleo.memberservice.global.exception.CommonException;
+import com.doubleo.memberservice.global.exception.GrpcExceptionUtil;
 import com.doubleo.memberservice.global.exception.errorcode.MemberErrorCode;
 import io.grpc.stub.StreamObserver;
 import net.devh.boot.grpc.server.service.GrpcService;
@@ -34,6 +34,7 @@ public class MemberGrpcServiceImpl extends MemberServiceGrpc.MemberServiceImplBa
                         },
                         () ->
                                 responseObserver.onError(
-                                        new CommonException(MemberErrorCode.MEMBER_NOT_FOUND)));
+                                        GrpcExceptionUtil.toStatusRuntimeException(
+                                                MemberErrorCode.MEMBER_NOT_FOUND)));
     }
 }
