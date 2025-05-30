@@ -83,7 +83,7 @@ dependencies {
 
     //gRPC
     //모듈
-    implementation "com.doubleo.grpc:member-interface:0.1.4"
+    implementation "com.doubleo.grpc:member-interface:0.2.2"
 
     //gRPC 런타임
     implementation "io.grpc:grpc-netty:1.63.0"

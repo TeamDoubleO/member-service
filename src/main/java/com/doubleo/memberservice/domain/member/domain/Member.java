@@ -35,6 +35,9 @@ public class Member extends BaseTimeEntity {
     @Column(name = "member_contact", nullable = false)
     private String contact;
 
+    @Column(name = "fcm_token")
+    private String fcmToken;
+
     @Builder(access = AccessLevel.PRIVATE)
     private Member(
             String email,
@@ -65,6 +68,10 @@ public class Member extends BaseTimeEntity {
 
     public void updateMemberPassword(String passwordNew) {
         this.password = passwordNew;
+    }
+
+    public void updateMemberFcmToken(String fcmTokenNew) {
+        this.fcmToken = fcmTokenNew;
     }
 
     private static String validateRegNo(String regNo) {

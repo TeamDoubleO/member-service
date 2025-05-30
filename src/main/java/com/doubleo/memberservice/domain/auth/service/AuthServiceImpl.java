@@ -25,6 +25,8 @@ public class AuthServiceImpl implements AuthService {
         if (!encoder.matches(request.password(), member.getPassword())) {
             throw new CommonException(MemberErrorCode.MEMBER_NOT_FOUND);
         }
+        member.updateMemberFcmToken(request.fcmToken());
+        memberRepository.save(member);
         return getLoginResponse(member);
     }
 
