@@ -38,4 +38,29 @@ public class MemberGrpcServiceImpl extends MemberServiceGrpc.MemberServiceImplBa
                                         GrpcExceptionUtil.toStatusRuntimeException(
                                                 MemberErrorCode.MEMBER_NOT_FOUND)));
     }
+
+    @Override
+    public void getMemberByNameAndRegNo(
+            MemberByNameAndRegNoRequest request, StreamObserver<MemberResponse> responseObserver) {
+        memberRepository
+                .findByNameAndRegNo(request.getMemberName(), request.getMemberRegNo())
+                .ifPresentOrElse(
+                        res -> {
+                            MemberResponse resp =
+                                    MemberResponse.newBuilder()
+                                            .setMemberId(res.getId())
+                                            .setMemberEmail(res.getEmail())
+                                            .setMemberName(res.getName())
+                                            .setMemberRegNo(res.getRegNo())
+                                            .setMemberContact(res.getContact())
+                                            .setFcmToken(res.getFcmToken())
+                                            .build();
+                            responseObserver.onNext(resp);
+                            responseObserver.onCompleted();
+                        },
+                        () ->
+                                responseObserver.onError(
+                                        GrpcExceptionUtil.toStatusRuntimeException(
+                                                MemberErrorCode.MEMBER_NOT_FOUND)));
+    }
 }
