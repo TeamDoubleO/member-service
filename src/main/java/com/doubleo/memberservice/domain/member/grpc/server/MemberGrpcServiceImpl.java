@@ -56,7 +56,9 @@ public class MemberGrpcServiceImpl extends MemberServiceGrpc.MemberServiceImplBa
                                             .setMemberName(res.getName())
                                             .setMemberRegNo(res.getRegNo())
                                             .setMemberContact(res.getContact())
-                                            .setFcmToken(res.getFcmToken())
+                                            .setFcmToken(
+                                                    Optional.ofNullable(res.getFcmToken())
+                                                            .orElse(""))
                                             .build();
                             responseObserver.onNext(resp);
                             responseObserver.onCompleted();
