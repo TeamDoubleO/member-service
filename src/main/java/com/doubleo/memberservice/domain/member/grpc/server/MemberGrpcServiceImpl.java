@@ -4,6 +4,7 @@ import com.doubleo.memberservice.domain.member.repository.MemberRepository;
 import com.doubleo.memberservice.global.exception.GrpcExceptionUtil;
 import com.doubleo.memberservice.global.exception.errorcode.MemberErrorCode;
 import io.grpc.stub.StreamObserver;
+import java.util.Optional;
 import net.devh.boot.grpc.server.service.GrpcService;
 
 @GrpcService
@@ -28,7 +29,9 @@ public class MemberGrpcServiceImpl extends MemberServiceGrpc.MemberServiceImplBa
                                             .setMemberName(res.getName())
                                             .setMemberRegNo(res.getRegNo())
                                             .setMemberContact(res.getContact())
-                                            .setFcmToken(res.getFcmToken())
+                                            .setFcmToken(
+                                                    Optional.ofNullable(res.getFcmToken())
+                                                            .orElse(""))
                                             .build();
                             responseObserver.onNext(resp);
                             responseObserver.onCompleted();
